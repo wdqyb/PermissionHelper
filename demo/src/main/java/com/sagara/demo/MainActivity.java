@@ -1,7 +1,17 @@
-# PermissionHelper
-an android library for android M runtime permission
-##Usage
-```
+package com.sagara.demo;
+
+import android.Manifest;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
+
+import com.sagara.permissionhelper.PermissionDenied;
+import com.sagara.permissionhelper.PermissionGrant;
+import com.sagara.permissionhelper.PermissionHelper;
+
+
 public class MainActivity extends BaseActivity {
 
   @Override
@@ -11,12 +21,13 @@ public class MainActivity extends BaseActivity {
     findViewById(R.id.tv_test).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        //param isForce : true guide user to grant the permission
         PermissionHelper.requestPermissions(MainActivity.this, 100,false ,Manifest.permission.CALL_PHONE,Manifest.permission.READ_CONTACTS);
       }
     });
   }
- @PermissionGrant(Manifest.permission.CALL_PHONE)
+
+  @SuppressWarnings("MissingPermission")
+  @PermissionGrant(Manifest.permission.CALL_PHONE)
   public void callPhone() {
     Toast.makeText(this,"CALL_PHONE grant",Toast.LENGTH_LONG).show();
     startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+456)));
@@ -38,19 +49,5 @@ public class MainActivity extends BaseActivity {
 
     Toast.makeText(this,"readContact denied",Toast.LENGTH_LONG).show();
   }
-```
-need override
 
-```
- @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    PermissionHelper.onRequestPermissionsResult(BaseActivity.this, requestCode, permissions, grantResults);
-  }
-
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    PermissionHelper.onActivityResult(this, requestCode, resultCode, data);
-    super.onActivityResult(requestCode, resultCode, data);
-
-  }
-```
+}
